@@ -5,6 +5,8 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const categoryController = require('../controllers/categoryController');
 const questionController = require("../controllers/questionController");
+const ContactController = require('../controllers/contactController');
+const contactController = new ContactController(); // <-- Add this line
 
 // Auth
 router.post('/register', authController.register);
@@ -14,6 +16,8 @@ router.get("/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 router.post("/logout", authController.logout);
+router.post("/forgetpassword", authController.forgetPassword);
+router.post("/resetpassword", authController.resetPassword);
 
 // Users
 router.get('/users', authMiddleware, userController.getAllUsers);
@@ -30,5 +34,6 @@ router.get("/getQuestions", questionController.getQuestion);
 router.post("/editQuestion", questionController.editQuestion);
 router.post("/deletequestion", questionController.deleteQuestion);
 router.get("/getQuestionById/:id", questionController.getQuestionById);
+router.post("/contact", contactController.createContact.bind(contactController));
 
 module.exports = router;
