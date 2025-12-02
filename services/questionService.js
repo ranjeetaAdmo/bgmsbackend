@@ -71,12 +71,12 @@ exports.deleteQuestion = (id) => {
   });
 };
 
-exports.getQuestionById = (id) => { 
+exports.getQuestionById = (id) => {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT 
        *
-      FROM questions 
+      FROM questions
       WHERE id = ? AND status = 1
     `;
     db.query(sql, [id], (err, results) => {
