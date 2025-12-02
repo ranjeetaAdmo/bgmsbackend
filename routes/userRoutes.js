@@ -35,5 +35,5 @@ router.post("/editQuestion", questionController.editQuestion);
 router.post("/deletequestion", questionController.deleteQuestion);
 router.get("/getQuestionById/:id", questionController.getQuestionById);
 router.post("/contact", contactController.createContact.bind(contactController));
-
+router.get("/contacts", contactController.getContacts.bind(contactController));
 module.exports = router;

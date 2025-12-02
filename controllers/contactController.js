@@ -4,10 +4,20 @@ class ContactController {
     async createContact(req, res) {
         try {
             const { name, email, phone, message } = req.body;
-            const id = await contactService.createContact({ name, email, phone, message });
-            res.status(201).json({ id, name, email, phone, message });
+            const idObj = await contactService.createContact({ name, email, phone, message });
+            res.status(201).json({
+                success: true,
+                message: "Contact saved successfully",
+                data: {
+                    id: idObj.id,
+                    name,
+                    email,
+                    phone,
+                    message
+                }
+            });
         } catch (err) {
-            res.status(500).json({ error: 'Failed to create contact' });
+            res.status(500).json({ success: false, message: err.message || 'Failed to create contact' });
         }
     }
 
