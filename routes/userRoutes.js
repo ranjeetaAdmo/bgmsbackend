@@ -7,6 +7,7 @@ const categoryController = require('../controllers/categoryController');
 const questionController = require("../controllers/questionController");
 const ContactController = require('../controllers/contactController');
 const contactController = new ContactController(); // <-- Add this line
+const userResponseController = require('../controllers/userResponseController');
 
 // Auth
 router.post('/register', authController.register);
@@ -36,4 +37,8 @@ router.post("/deletequestion", questionController.deleteQuestion);
 router.get("/getQuestionById/:id", questionController.getQuestionById);
 router.post("/contact", contactController.createContact.bind(contactController));
 router.get("/contacts", contactController.getContacts.bind(contactController));
+//responses
+router.post('/saveResponse', userResponseController.saveResponses);
+router.get('/userResponses/:user_id', userResponseController.getUserResponses);
+
 module.exports = router;

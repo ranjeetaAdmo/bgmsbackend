@@ -28,7 +28,7 @@ exports.addQuestion = (categoryId, questionText, options, correctAnswerIndex) =>
 
 exports.getQuestions = () => {
  return new Promise((resolve, reject) => {
-    const sql = 'SELECT q.id , q.text as question_text, q.created_at, c.category_name FROM questions q JOIN category c On q.category_id=c.id WHERE q.status=1';
+    const sql = 'SELECT q.id , q.text as question_text,q.option1,q.option2,q.option3,q.option4,  q.created_at, c.category_name FROM questions q JOIN category c On q.category_id=c.id WHERE q.status=1';
     db.query(sql, (err, results) => {
       if (err) return reject(err);
       resolve(results);
