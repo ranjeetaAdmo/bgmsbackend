@@ -1,14 +1,20 @@
 const userResponseService = require('../services/userResponseService');
 
 exports.saveResponses = async (req, res) => {
-  const { user_id, responses } = req.body;
-  if (!user_id || !Array.isArray(responses)) {
-    return res.status(400).json({ success: false, message: 'Missing user_id or responses' });
+  const { responses } = req.body;
+
+  // user id from JWT token (cookie)
+  const userId = req.user.userId;
+
+  if (!Array.isArray(responses)) {
+    return res.status(400).json({ success: false, message: 'Responses array is missing' });
   }
+
   try {
-    await userResponseService.saveResponses(user_id, responses);
+    await userResponseService.saveResponses(userId, responses);
     res.json({ success: true, message: 'Responses saved successfully' });
   } catch (err) {
+    console.error("Save response error:", err);
     res.status(500).json({ success: false, message: 'Failed to save responses' });
   }
 };

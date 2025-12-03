@@ -1,14 +1,17 @@
 const db = require('../config/db');
 
 exports.saveResponses = (user_id, responses) => {
-  // responses: [{ question_id, selected_option }]
   return Promise.all(
     responses.map(resp =>
       new Promise((resolve, reject) => {
-        const sql = `INSERT INTO userresponse (user_id, question_id, selected_option) VALUES (?, ?, ?)`;
+        const sql = `
+          INSERT INTO userresponse (user_id, question_id, selected_option)
+          VALUES (?, ?, ?)
+          ON DUPLICATE KEY UPDATE selected_option = VALUES(selected_option)
+        `;
         db.query(sql, [user_id, resp.question_id, resp.selected_option], (err, result) => {
           if (err) return reject(err);
-          resolve(result.insertId);
+          resolve(result);
         });
       })
     )

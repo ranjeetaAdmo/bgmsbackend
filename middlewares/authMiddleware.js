@@ -1,29 +1,26 @@
-// const jwt = require('jsonwebtoken');
-
-// module.exports = (req, res, next) => {
-//   const authHeader = req.headers['authorization'];
-//   if (!authHeader) return res.status(401).json({ message: "No token provided" });
-
-//   const token = authHeader.split(" ")[1];
-//   if (!token) return res.status(401).json({ message: "Invalid token format" });
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET || "mytemporarysecretkey");
-//     req.user = decoded;
-//     next();
-//   } catch (err) {
-//     return res.status(403).json({ message: "Invalid or expired token" });
-//   }
-// };
-
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.token; // get from cookie
-  if (!token) return res.status(401).json({ msg: "No token, unauthorized" });
+  // 1️⃣ Try Authorization header → Bearer token
+  let token = null;
+  const authHeader = req.headers["authorization"];
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+  }
+
+  // 2️⃣ If not found, try cookie token
+  if (!token) {
+    token = req.cookies?.token;
+  }
+
+  // 3️⃣ If still no token → unauthorized
+  if (!token) {
+    return res.status(401).json({ msg: "No token, unauthorized" });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET|| "mytemporarysecretkey");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "mytemporarysecretkey");
     req.user = decoded;
     next();
   } catch (err) {

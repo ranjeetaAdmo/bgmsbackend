@@ -10,6 +10,7 @@ exports.register = async (req, res) => {
   if (!fullname || !email || !password) {
     return res.status(400).json({ message: "Please provide all requested fields" });
   }
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email format" });
@@ -24,7 +25,41 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = await userService.createUser(fullname, email, hashedPassword);
 
-    res.status(201).json({ message: "User registered successfully", userId });
+    // Fetch the newly created user (to get user_type for role)
+    const newUser = await userService.findUserByEmail(email);
+
+    let role = 'user';
+    if (newUser.user_type === 2) {
+      role = 'admin';
+    }
+
+    // Create JWT token
+    const token = jwt.sign(
+      { userId: newUser.id, email: newUser.email, role },
+      process.env.JWT_SECRET || "mytemporarysecretkey",
+      { expiresIn: "15m" }
+    );
+
+    // Store token in httpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000
+    });
+
+    // Send response SAME AS LOGIN
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: newUser.id,
+        fullname: newUser.fullname,
+        email: newUser.email,
+        role,
+        token
+      }
+    });
+
   } catch (err) {
     console.error("Register error:", err);
     res.status(500).json({ message: "Server error" });
@@ -72,6 +107,7 @@ exports.login = async (req, res) => {
         id: user.id,
         fullname: user.fullname,
         email: user.email,
+        token,
         role
       }
     });

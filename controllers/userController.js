@@ -3,10 +3,22 @@ const userService = require('../services/userService');
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await userService.getAllUsers();
-    res.json(users);
+
+    return res.status(200).json({
+      success: true,
+      status_code: 200,
+      data: users,
+      message: "Users fetched successfully"
+    });
   } catch (err) {
     console.error("GetAllUsers error:", err);
-    res.status(500).json({ message: "Server error" });
+
+    return res.status(500).json({
+      success: false,
+      status_code: 500,
+      data: [],
+      message: "Server error"
+    });
   }
 };
 
