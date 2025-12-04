@@ -1,5 +1,6 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+// services/emailService.js
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export const sendResetEmail = async (to, resetLink) => {
+const sendResetEmail = async (to, resetLink) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to,
@@ -24,3 +25,5 @@ export const sendResetEmail = async (to, resetLink) => {
     };
     return transporter.sendMail(mailOptions);
 };
+
+module.exports = { sendResetEmail };
