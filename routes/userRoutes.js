@@ -46,7 +46,8 @@ router.post("/editQuestion", adminMiddleware, questionController.editQuestion);
 router.post("/deletequestion", adminMiddleware, questionController.deleteQuestion);
 router.get("/getQuestionById/:id",adminMiddleware, questionController.getQuestionById);
 router.get("/contacts", adminMiddleware, contactController.getContacts.bind(contactController));
-//responses
+router.delete("/delete-contact/:id",adminMiddleware,contactController.deleteContact.bind(contactController));
+//responsesdeleteContact
 router.post('/saveResponse', userResponseController.saveResponses);
 router.get('/userResponses/:user_id', adminMiddleware, userResponseController.getUserResponses);
 

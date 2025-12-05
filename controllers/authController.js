@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
     const token = jwt.sign(
       { userId: newUser.id, email: newUser.email, role },
       process.env.JWT_SECRET || "mytemporarysecretkey",
-      { expiresIn: "15m" }
+      { expiresIn: "1d" }
     );
 
     // Store token in httpOnly cookie
@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role },
         process.env.JWT_SECRET || "mytemporarysecretkey",
-      { expiresIn: "15m" }
+      { expiresIn: "1d" }
     );
     // store JWT in httpOnly cookie
     res.cookie("token", token, {
