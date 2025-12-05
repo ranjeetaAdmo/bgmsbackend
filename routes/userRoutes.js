@@ -21,6 +21,12 @@ router.post("/logout", authController.logout);
 router.get("/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
+router.get("/auth/check", authMiddleware, (req, res) => {
+  res.json({
+    loggedIn: true,
+    user: req.user,
+  });
+});
 router.use(authMiddleware); 
 
 

@@ -45,7 +45,8 @@ exports.register = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000
+       maxAge: 24 * 60 * 60 * 1000, // 1 day
+       path: "/",
     });
 
     // Send response SAME AS LOGIN
@@ -99,7 +100,8 @@ exports.login = async (req, res) => {
       httpOnly: true,       // prevent JS access
       secure: false,         // only over HTTPS
       sameSite: "lax",   // CSRF protection
-      maxAge: 15 * 60 * 1000 // 15 mins
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      path: "/",
     });
 
     res.json({
@@ -137,6 +139,7 @@ exports.logout = async (req, res) => {
       httpOnly: true,
       secure: false, // set true if using HTTPS
       sameSite: "lax",
+      path: "/"
     });
 
     return res.json({ message: "Logged out successfully" });
